@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -26,6 +27,7 @@ public class MainActivity extends Activity {
     private TextView info;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
+    private AccessToken accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +42,15 @@ public class MainActivity extends Activity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                info.setText(
-                        "User ID: "
-                                + loginResult.getAccessToken().getUserId()
-                                + "\n" +
-                                "Auth Token: "
-                                + loginResult.getAccessToken().getToken()
-                );
+//                info.setText(
+//                        "User ID: "
+//                                + loginResult.getAccessToken().getUserId()
+//                                + "\n" +
+//                                "Auth Token: "
+//                                + loginResult.getAccessToken().getToken()
+//                );
+                setContentView(R.layout.post_activity);
+
             }
 
             @Override
@@ -59,6 +63,14 @@ public class MainActivity extends Activity {
                 info.setText("Login attempt failed.");
             }
         });
+
+        accessToken = AccessToken.getCurrentAccessToken();
+        // If already logged in show the home view
+        if (accessToken != null) {//<- IMPORTANT
+            Intent intent = new Intent("com.example.sivagurunathanv.facebookpost.PostActivity");
+            startActivity(intent);
+            finish();//<- IMPORTANT
+        }
     }
 
 
